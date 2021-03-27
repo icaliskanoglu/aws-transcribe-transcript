@@ -44,11 +44,13 @@ def convert_transcript(infile,outfile):
                             w.write(line + '\n\n')
 
 def lambda_handler(event, context):
+
+    output_prefix = os.environ['OUTPUT_KEY_PREFIX']
     for record in event['Records']:
         bucket=record['s3']['bucket']['name']
         key=record['s3']['object']['key']
         localkey=os.path.basename(key)
-        txtfile='output/'+localkey+'.txt'
+        txtfile=output_prefix+'/'+localkey+'.txt'
         download_path = '/tmp/{}'.format(localkey)
         upload_path = '/tmp/{}.txt'.format(localkey)
         s3_client.download_file(bucket,key,download_path)
